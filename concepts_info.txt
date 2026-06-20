@@ -1,0 +1,37 @@
+Concept 1: HTML Attributes vs DOM Properties
+----------------------------------------------
+An Attribute represents the initial state defined in the HTML markup, whereas a Property is the live, dynamic value stored in the browser's DOM node.
+
+Live Test Input Demonstration:
+- Original HTML Value: Starts as defined in markup (e.g. value="Original HTML Value")
+- input.getAttribute("value"): Stays static, holding the original markup value.
+- input.value: Dynamic, updates in real-time as the user types in the input field.
+- Visual outcome: Typing in the box causes input.value to diverge from input.getAttribute("value").
+
+
+Concept 2: Event Propagation Explorer
+-------------------------------------
+Events in the DOM travel down to the target during Capturing, then bubble back up during Bubbling.
+
+Visual sandbox layout:
+- Grandparent (#grandparent-node)
+  └── Parent (#parent-node)
+      └── Child Button (#child-node)
+
+Logs are generated in real-time tracking the exact order of listeners hit during either the Bubbling phase (Child -> Parent -> Grandparent) or the Capturing phase (Grandparent -> Parent -> Child).
+
+
+Concept 3: Browser Rendering Pipeline
+-------------------------------------
+How browsers turn text files (HTML, CSS, JS) into pixels on the screen.
+
+Step-by-Step Pipeline:
+01. Bytes & Parsing: Reads raw HTML/CSS bytes off the wire and processes text characters based on encoding.
+02. Tokenization: Converts characters into meaningful tokens like tags, attributes, and text segments.
+03. DOM / CSSOM: Builds tree models matching parent-child structures (Document Object Model & CSSOM).
+04. Render Tree: Combines DOM and CSSOM to create a layout tree, filtering out elements like display: none.
+05. Layout & Paint: Calculates visual coordinates (geometry) and paints shapes, text, and styles to the viewport.
+
+Reflow vs. Repaint:
+- Modifying layout properties (like width or position) triggers recalculating layout geometry (Reflow) + painting.
+- Modifying visual properties (like background-color) only triggers painting (Repaint).
