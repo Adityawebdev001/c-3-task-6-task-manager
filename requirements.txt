@@ -1,0 +1,64 @@
+📖 Task Overview
+Build a fully interactive Task Manager Application using only HTML, CSS, and Vanilla JavaScript (No frameworks or libraries allowed). The project focuses on core browser rendering, DOM manipulation, and event handling concepts.
+
+🚀 Core Features to Implement
+1. Task Creation Module
+Create a form with a Task Title Input, Category Dropdown, and Add Task Button.
+
+Dynamically generate task cards on form submission using createElement(), createTextNode(), and append() or appendChild().
+
+2. Attributes vs Properties
+Add custom data attributes (data-id, data-status, data-category) to every task card.
+
+Utilize DOM methods: getAttribute(), setAttribute(), removeAttribute(), hasAttribute(), and dataset.
+
+Include a code/comment demonstration showing the difference between input.value and input.getAttribute("value").
+
+3. DOM Manipulation & Actions
+Each task card must feature Edit, Complete, and Delete buttons.
+
+Integrate the following methods into your code: append(), prepend(), before(), after(), replaceWith(), and remove().
+
+4. Theme Toggle
+Implement a Light/Dark mode switch.
+
+Manage themes using classList, dataset, and setAttribute() (e.g., data-theme="dark").
+
+5. Event Handling & Delegation
+Use addEventListener() for all major actions.
+
+Mandatory: Attach a single listener to the parent container of the tasks and handle individual card actions using Event Delegation.
+
+6. Event Propagation Demonstration
+Create a structural layout in your UI: Grandparent └── Parent └── Child Button.
+
+Demonstrate and log the exact console execution order for both Event Bubbling and Event Capturing, complete with explanatory code comments.
+
+7. Browser Rendering Pipeline Section
+Build a dedicated visual section (using cards, a flow diagram, or connected boxes) explaining the step-by-step pipeline:
+HTML/CSS ➔ Parsing ➔ Tokenization ➔ DOM/CSSOM Tree ➔ Render Tree.
+
+🌟 Bonus Features (Optional)
+Task Search & Category Filtering
+
+Completed / Pending task counters
+
+"Clear All Tasks" button
+
+Performance optimization using DocumentFragment
+
+Data persistence via LocalStorage
+
+📦 Submission Requirements
+GitHub Repository: Containing your clean, uncompiled source code.
+
+Live Deployment: Hosted via GitHub Pages, Vercel, or Netlify.
+
+Comprehensive README: Documenting the core concepts learned (Parsing, Tokenization, DOM/CSSOM/Render Trees, Bubbling, Capturing, and Delegation).
+
+📊 Evaluation Criteria
+30% - DOM Manipulation
+25% - Event Handling & Delegation
+15% - Attributes vs Properties
+15% - Code Quality
+15% - UI/UX Layout

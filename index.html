@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Premium interactive Task Manager showcasing vanilla DOM manipulation, event handling, rendering pipelines, and premium CSS aesthetics.">
+    <title>Aura Task Manager & DOM Explorer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Glow Blobs for Glassmorphism -->
+    <div class="glow-blob glow-1"></div>
+    <div class="glow-blob glow-2"></div>
+    <div class="glow-blob glow-3"></div>
+
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-square-kanban logo-icon"></i>
+                </div>
+                <div>
+                    <h1 class="brand-title">AURA</h1>
+                    <p class="brand-subtitle">DOM & Event Playground</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Theme">
+                    <i class="fa-solid fa-moon moon-icon"></i>
+                    <i class="fa-solid fa-sun sun-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- Sidebar: Task Creation & Filters -->
+        <aside class="sidebar-panel">
+            <!-- Task Creation Form -->
+            <section class="card glass-card form-section" aria-labelledby="form-heading">
+                <h2 id="form-heading" class="section-title"><i class="fa-solid fa-circle-plus title-icon"></i> Create Task</h2>
+                <form id="task-form" class="task-form" novalidate>
+                    <div class="form-group">
+                        <label for="task-title" class="form-label">Task Title</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-pen-to-square input-icon"></i>
+                            <input type="text" id="task-title" class="form-input" placeholder="e.g. Design Landing Page" required autocomplete="off">
+                        </div>
+                        <span id="title-error" class="error-msg">Please enter a task title</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-category" class="form-label">Category</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-tags input-icon"></i>
+                            <select id="task-category" class="form-select">
+                                <option value="work">💼 Work</option>
+                                <option value="personal">👤 Personal</option>
+                                <option value="shopping">🛒 Shopping</option>
+                                <option value="urgent">🔥 Urgent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="add-task-btn" class="btn btn-primary btn-block">
+                        <span>Add Task</span>
+                        <i class="fa-solid fa-plus button-icon-right"></i>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Quick Filter & Actions -->
+            <section class="card glass-card filters-section" aria-labelledby="filter-heading">
+                <h2 id="filter-heading" class="section-title"><i class="fa-solid fa-sliders title-icon"></i> Filters & Controls</h2>
+                
+                <div class="form-group">
+                    <label for="search-input" class="form-label">Search Tasks</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                        <input type="text" id="search-input" class="form-input" placeholder="Type to search..." autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Filter Category</label>
+                    <div class="filter-pill-container" id="category-filter-container">
+                        <button class="filter-pill active" data-filter="all">All</button>
+                        <button class="filter-pill" data-filter="work">Work</button>
+                        <button class="filter-pill" data-filter="personal">Personal</button>
+                        <button class="filter-pill" data-filter="shopping">Shopping</button>
+                        <button class="filter-pill" data-filter="urgent">Urgent</button>
+                    </div>
+                </div>
+
+                <div class="control-actions">
+                    <button id="clear-all-btn" class="btn btn-danger btn-block">
+                        <i class="fa-regular fa-trash-can button-icon-left"></i>
+                        <span>Clear All Tasks</span>
+                    </button>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Main Workspace: Tasks List -->
+        <section class="tasks-panel card glass-card" aria-labelledby="tasks-heading">
+            <div class="panel-header">
+                <div>
+                    <h2 id="tasks-heading" class="section-title"><i class="fa-solid fa-list-check title-icon"></i> Active Board</h2>
+                    <p class="panel-subtitle">Manage, edit, and reorganize your tasks</p>
+                </div>
+                <!-- Status counters -->
+                <div class="status-counters">
+                    <div class="counter-badge all">
+                        <span class="counter-label">All</span>
+                        <span id="counter-all" class="counter-value">0</span>
+                    </div>
+                    <div class="counter-badge pending">
+                        <span class="counter-label">Pending</span>
+                        <span id="counter-pending" class="counter-value">0</span>
+                    </div>
+                    <div class="counter-badge completed">
+                        <span class="counter-label">Done</span>
+                        <span id="counter-completed" class="counter-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task List Container (Will host event delegation) -->
+            <div id="task-list" class="task-list">
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state">
+                    <div class="empty-icon-wrapper">
+                        <i class="fa-solid fa-wind empty-icon"></i>
+                    </div>
+                    <h3>No tasks found</h3>
+                    <p>Add a task on the left sidebar to populate your board, or clear filters.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Technical Sandbox Grid (Attributes vs Properties & Event Propagation) -->
+    <section class="sandbox-grid" aria-label="Technical Concepts Sandbox">
+        
+        <!-- Attributes vs Properties Module -->
+        <article class="card glass-card sandbox-card">
+            <div class="card-badge">Concept 1</div>
+            <h2 class="sandbox-title"><i class="fa-solid fa-code title-icon"></i> HTML Attributes vs DOM Properties</h2>
+            <p class="sandbox-desc">
+                An <strong>Attribute</strong> represents the initial state defined in the HTML markup, whereas a <strong>Property</strong> is the live, dynamic value stored in the browser's DOM node.
+            </p>
+            
+            <div class="demo-sandbox">
+                <div class="form-group">
+                    <label for="demo-input" class="form-label">Live Test Input</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-keyboard input-icon"></i>
+                        <!-- Starting with attribute value="Original HTML Value" -->
+                        <input type="text" id="demo-input" class="form-input code-input" value="Original HTML Value" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="properties-output">
+                    <div class="output-row">
+                        <span class="output-label"><code>input.getAttribute("value")</code></span>
+                        <span id="attr-output" class="output-value code-value">Original HTML Value</span>
+                    </div>
+                    <div class="output-row">
+                        <span class="output-label"><code>input.value</code></span>
+                        <span id="prop-output" class="output-value code-value highlight-cyan">Original HTML Value</span>
+                    </div>
+                </div>
+
+                <div class="sandbox-tip">
+                    <i class="fa-solid fa-lightbulb tip-icon"></i>
+                    <span>Type something above to see them diverge. <code>value</code> tracks live state, while <code>getAttribute()</code> stays static!</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Event Propagation Playground -->
+        <article class="card glass-card sandbox-card">
+            <div class="card-badge">Concept 2</div>
+            <h2 class="sandbox-title"><i class="fa-solid fa-wave-square title-icon"></i> Event Propagation Explorer</h2>
+            <p class="sandbox-desc">
+                Events in the DOM travel down to the target during <strong>Capturing</strong>, then bubble back up during <strong>Bubbling</strong>.
+            </p>
+
+            <div class="propagation-controls">
+                <div class="toggle-group-labels">
+                    <span class="control-label-text">Select Mode:</span>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="propagation-mode" value="bubble" checked>
+                            <span class="radio-custom"></span> Bubbling Phase
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="propagation-mode" value="capture">
+                            <span class="radio-custom"></span> Capturing Phase
+                        </label>
+                    </div>
+                </div>
+                <button id="clear-prop-logs" class="btn btn-secondary btn-sm">Clear Logs</button>
+            </div>
+
+            <div class="propagation-sandbox">
+                <!-- Grandparent Container -->
+                <div id="grandparent-node" class="propagation-box grandparent">
+                    <span class="box-label">Grandparent (#grandparent-node)</span>
+                    
+                    <!-- Parent Container -->
+                    <div id="parent-node" class="propagation-box parent">
+                        <span class="box-label">Parent (#parent-node)</span>
+                        
+                        <!-- Child Button -->
+                        <button id="child-node" class="btn btn-primary child-btn">
+                            Click Child Button (#child-node)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Console for Playground Output -->
+            <div class="prop-console">
+                <div class="console-header">
+                    <span><i class="fa-solid fa-terminal console-icon"></i> Local Event Logger</span>
+                    <span class="console-indicator">Active</span>
+                </div>
+                <div id="console-logs" class="console-body">
+                    <div class="console-placeholder">Click the child button above to trace event execution...</div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- Browser Rendering Pipeline Visualization -->
+    <section class="pipeline-section" aria-labelledby="pipeline-heading">
+        <div class="card glass-card pipeline-card">
+            <div class="card-badge">Concept 3</div>
+            <h2 id="pipeline-heading" class="pipeline-title"><i class="fa-solid fa-gears title-icon"></i> Browser Rendering Pipeline</h2>
+            <p class="pipeline-desc">
+                How browsers turn text files (HTML, CSS, JS) into pixels on the screen. Hover over a stage to see what happens behind the scenes.
+            </p>
+
+            <div class="pipeline-flow">
+                <!-- Step 1 -->
+                <div class="flow-step" tabindex="0">
+                    <div class="step-num">01</div>
+                    <div class="step-icon-wrapper"><i class="fa-solid fa-code"></i></div>
+                    <h3>Bytes & Parsing</h3>
+                    <p class="step-text">Reads raw HTML/CSS bytes off the wire and processes text characters based on encoding.</p>
+                    <div class="step-popover">
+                        <strong>Parsing details:</strong> The network streams raw data bytes, which the browser engine decodes into text. It reads character sequences and prepares them for the tokenization engine.
+                    </div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+
+                <!-- Step 2 -->
+                <div class="flow-step" tabindex="0">
+                    <div class="step-num">02</div>
+                    <div class="step-icon-wrapper"><i class="fa-solid fa-tags"></i></div>
+                    <h3>Tokenization</h3>
+                    <p class="step-text">Converts characters into meaningful tokens like tags, attributes, and text segments.</p>
+                    <div class="step-popover">
+                        <strong>Tokenization details:</strong> Uses state machine parsing to generate tags (e.g. <code>&lt;html&gt;</code>, <code>&lt;body&gt;</code>) and parse attributes. These tokens serve as the structural blocks of our pages.
+                    </div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+
+                <!-- Step 3 -->
+                <div class="flow-step" tabindex="0">
+                    <div class="step-num">03</div>
+                    <div class="step-icon-wrapper"><i class="fa-solid fa-sitemap"></i></div>
+                    <h3>DOM / CSSOM</h3>
+                    <p class="step-text">Builds tree models matching parent-child structures (Document Object Model & CSSOM).</p>
+                    <div class="step-popover">
+                        <strong>Tree structures:</strong> Parses tags into Node Objects. DOM holds content structure, and CSSOM maps visual rules, cascading styles from stylesheets and media queries.
+                    </div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+
+                <!-- Step 4 -->
+                <div class="flow-step" tabindex="0">
+                    <div class="step-num">04</div>
+                    <div class="step-icon-wrapper"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3>Render Tree</h3>
+                    <p class="step-text">Combines DOM and CSSOM to create a layout tree, filtering out elements like <code>display: none</code>.</p>
+                    <div class="step-popover">
+                        <strong>Render Tree creation:</strong> A combined model containing elements that are visible on the page. Script elements, <code>&lt;head&gt;</code>, and <code>display: none</code> elements are bypassed.
+                    </div>
+                </div>
+
+                <div class="flow-arrow"><i class="fa-solid fa-angles-right"></i></div>
+
+                <!-- Step 5 -->
+                <div class="flow-step" tabindex="0">
+                    <div class="step-num">05</div>
+                    <div class="step-icon-wrapper"><i class="fa-solid fa-vector-square"></i></div>
+                    <h3>Layout & Paint</h3>
+                    <p class="step-text">Calculates visual coordinates (geometry) and paints shapes, text, and styles to the viewport.</p>
+                    <div class="step-popover">
+                        <strong>Layout & Painting:</strong> Reflow/Layout calculates absolute dimensions. Repaint/Painting compiles instructions for colors, borders, shadows, and text characters.
+                    </div>
+                </div>
+            </div>
+
+            <div class="pipeline-foot">
+                <i class="fa-solid fa-circle-exclamation info-icon"></i>
+                <span><strong>Reflow vs. Repaint:</strong> Modifying layout properties (like <code>width</code> or <code>position</code>) triggers recalculating layout geometry (Reflow) + painting. Modifying visual properties (like <code>background-color</code>) only triggers painting.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer section -->
+    <footer class="app-footer-bar">
+        <p>Aura Task Manager © 2026. Made with Vanilla HTML, CSS & JavaScript.</p>
+        <div class="footer-links">
+            <a href="https://github.com" target="_blank"><i class="fa-brands fa-github"></i> Source</a>
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model" target="_blank"><i class="fa-solid fa-book"></i> MDN DOM API</a>
+        </div>
+    </footer>
+    
+    <script src="app.js"></script>
+</body>
+</html>
