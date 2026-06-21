@@ -139,20 +139,4 @@ This application demonstrates all primary DOM manipulation APIs:
 
 ---
 
-## 💻 Running the Project Locally
 
-Since the project uses vanilla technologies, you can run it directly:
-
-1. Clone or open the project folder in your terminal.
-2. Spin up a simple local web server:
-   ```bash
-   # Using Python
-   python3 -m http.server 8000
-   
-   # Using Node.js http-server
-   npx http-server .
-   ```
-3. Open `http://localhost:8000` in your web browser.
-
----
-*Created in pair programming with Antigravity.*
